@@ -47,7 +47,7 @@ Sub replaceShapeFonts(shapes As Shapes)
 End Sub
 
 
-Sub alibabafonts()
+Sub replaceFonts()
     
     Debug.Print "Replace fonts in slide master to my favorites ..."
     
