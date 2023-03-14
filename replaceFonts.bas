@@ -1,5 +1,5 @@
-Const myFontName = "Alibaba Sans"
-Const myFontNameFarEast = "Alibaba PuHuiTi 2.0 55 Regular"
+Const myFontName = "Arial"
+Const myFontNameFarEast = "Microsoft YaHei"
 
 Sub replaceMasterFonts(master As Master)
     With master.Theme.ThemeFontScheme
@@ -35,15 +35,40 @@ Sub replaceMasterFonts(master As Master)
     replaceShapeFonts master.Shapes
 End Sub
 
-Sub replaceShapeFonts(shapes As Shapes)
-    For Each shp In shapes
-        If shp.HasTextFrame Then
-            With shp.TextFrame.TextRange.Font
-                .Name = myFontName
-                .NameFarEast = myFontNameFarEast
-            End With
+Sub replaceShapeFonts(shps As Shapes)
+    For Each shp In shps
+        If shp.HasTable Then
+            Dim tbl As Table
+            Set tbl = shp.Table
+            Dim row As row
+            Dim cell As cell
+            For Each row In tbl.Rows
+                For Each cell In row.Cells
+                    replaceTextFrameFonts cell.shape
+                Next cell
+            Next row
+        ElseIf shp.HasSmartArt Then
+            Dim smartArt As SmartArt
+            Set smartArt = shp.SmartArt
+            Dim node As SmartArtNode
+            For Each node In smartArt.AllNodes
+               node.TextFrame2.TextRange.Font.Name = myFontName
+               node.TextFrame2.TextRange.Font.NameFarEast = myFontNameFarEast
+            '    Debug.Print node.TextFrame2.TextRange.Text
+            Next node
+        Else
+            replaceTextFrameFonts shp
         End If
     Next
+End Sub
+
+Sub replaceTextFrameFonts(shp)
+    If shp.HasTextFrame Then
+        With shp.TextFrame.TextRange.Font
+            .Name = myFontName
+            .NameFarEast = myFontNameFarEast
+        End With
+    End If
 End Sub
 
 
